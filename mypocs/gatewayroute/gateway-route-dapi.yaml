@@ -1,0 +1,14 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: directorysearch-api-route
+  namespace: app-dev
+spec:
+  httpRoute:
+    match:
+      prefix: "/directorysearch"
+    action:
+      target:
+        virtualService:
+          virtualServiceRef:
+            name: directorysearch

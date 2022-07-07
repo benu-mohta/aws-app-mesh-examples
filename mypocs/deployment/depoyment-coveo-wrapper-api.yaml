@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coveo-wrapper-api
+  namespace: app-dev
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: coveo-wrapper-api
+    version: v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coveo-wrapper-api-v1
+  namespace: app-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coveo-wrapper-api
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: coveo-wrapper-api
+        version: v1
+    spec:
+      containers:
+        - name: app
+          image: 246818788759.dkr.ecr.us-west-2.amazonaws.com/k8infra:color
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "COLOR"
+              value: "I am coveo wrapper"

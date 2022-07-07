@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: directorysearch-api
+  namespace: app-dev
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: directorysearch-api
+    version: v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: directorysearch-api-v1
+  namespace: app-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: directorysearch-api
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: directorysearch-api
+        version: v1
+    spec:
+      containers:
+        - name: app
+          image: 246818788759.dkr.ecr.us-west-2.amazonaws.com/k8infra:front
+          imagePullPolicy: Always
+          ports:
+            - name: app-port
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: app-port
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            failureThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: app-port
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            failureThreshold: 1
+          env:
+            - name: "COLOR"
+              value: "I am directory search API"
+            - name: "COVEO_HOST"
+              value: "coveo-wrapper.app-dev.svc.cluster.local:8080"

@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app-dev
+  labels:
+    mesh: dev-mesh
+    gateway: dev-vgw
+    appmesh.k8s.aws/sidecarInjectorWebhook: enabled
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: Mesh
+metadata:
+  name: dev-mesh
+spec:
+  namespaceSelector:
+    matchLabels:
+      mesh: dev-mesh

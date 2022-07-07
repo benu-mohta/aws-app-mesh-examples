@@ -1,0 +1,24 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: hello-world
+  namespace: app-dev
+spec:
+  podSelector:
+    matchLabels:
+      app: hello-world
+      version: v1
+  listeners:
+    - portMapping:
+        port: 8080
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/ping'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  serviceDiscovery:
+    dns:
+      hostname: hello-world.app-dev.svc.cluster.local

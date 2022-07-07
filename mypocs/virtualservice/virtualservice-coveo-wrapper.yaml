@@ -1,0 +1,46 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: coveo-wrapper
+  namespace: app-dev
+spec:
+  awsName: coveo-wrapper.app-dev.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: coveo-wrapper-api
+    #virtualRouter:
+    #  virtualRouterRef:
+    #    name: coveo-wrapper
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  namespace: app-dev
+  name: coveo-wrapper
+spec:
+  listeners:
+    - portMapping:
+        port: 8080
+        protocol: http
+  routes:
+    - name: generic
+      httpRoute:
+        match:
+          prefix: /          
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: coveo-wrapper-api
+              weight: 1    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coveo-wrapper
+  namespace: app-dev
+spec:
+  ports:
+    - port: 8080
+      name: http

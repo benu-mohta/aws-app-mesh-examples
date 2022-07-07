@@ -1,0 +1,27 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+ name: intenalsearch-ui-route
+ namespace: app-dev
+#spec:
+#  http:
+#    match:
+#      hostname:
+#        exact: "find.junipercloud.net"
+#    action:
+#      rewrite:
+#        hostname:
+#          default_target_hostname: "disabled"
+#      target:
+#        virtualService:
+#          virtualServiceRef:
+#            name: intersearch-ui-vs
+spec:
+  httpRoute:
+    match:
+      prefix: "/internalsearch"
+    action:
+      target:
+        virtualService:
+          virtualServiceRef:
+            name: internalsearch

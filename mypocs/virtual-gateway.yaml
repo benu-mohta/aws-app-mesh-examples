@@ -1,0 +1,16 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualGateway
+metadata:
+  name: dev-vgw
+  namespace: app-dev
+spec:
+  namespaceSelector:
+    matchLabels:
+      gateway: dev-vgw
+  podSelector:
+    matchLabels:
+      app: dev-vgw
+  listeners:
+    - portMapping:
+        port: 8088
+        protocol: http

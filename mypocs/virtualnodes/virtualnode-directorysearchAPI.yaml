@@ -1,0 +1,28 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: directorysearch-api
+  namespace: app-dev
+spec:
+  podSelector:
+    matchLabels:
+      app: directorysearch-api
+      version: v1
+  listeners:
+    - portMapping:
+        port: 8080
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/ping'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: coveo-wrapper
+  serviceDiscovery:
+    dns:
+      hostname: directorysearch-api.app-dev.svc.cluster.local

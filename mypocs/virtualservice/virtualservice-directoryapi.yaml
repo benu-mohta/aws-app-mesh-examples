@@ -1,0 +1,22 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: directorysearch
+  namespace: app-dev
+spec:
+  awsName: directorysearch.app-dev.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: directorysearch-api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: directorysearch
+  namespace: app-dev
+spec:
+  ports:
+    - port: 8080
+      name: http

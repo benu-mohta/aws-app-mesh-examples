@@ -1,0 +1,22 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: internalsearch
+  namespace: app-dev
+spec:
+  awsName: internalsearch.app-dev.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: internalsearch-api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: internalsearch
+  namespace: app-dev
+spec:
+  ports:
+    - port: 8080
+      name: http

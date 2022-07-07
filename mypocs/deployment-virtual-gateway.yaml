@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-vgw
+  namespace: app-dev
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8088
+      name: http
+  selector:
+    app: dev-vgw
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-vgw
+  namespace: app-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-vgw
+  template:
+    metadata:
+      labels:
+        app: dev-vgw
+    spec:
+      containers:
+        - name: envoy
+          image: 840364872350.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/aws-appmesh-envoy
+          ports:
+            - containerPort: 8088

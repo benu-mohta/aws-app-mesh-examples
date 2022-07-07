@@ -1,0 +1,22 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: helloworld
+  namespace: app-dev
+spec:
+  awsName: helloworld.app-dev.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: hello-world
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helloworld
+  namespace: app-dev
+spec:
+  ports:
+    - port: 8080
+      name: http
